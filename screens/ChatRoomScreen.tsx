@@ -5,6 +5,8 @@ import chatRoomData from '../data/Chats';
 import ChatMessage from '../components/ChatMessage';
 import InputBox from "../components/InputBox";
 import io from "socket.io-client";
+const serverip = require('../serverip.json');
+
 
 class ChatRoom extends Component {
     constructor(props) {
@@ -18,7 +20,7 @@ class ChatRoom extends Component {
             username: this.props.route.params.username,
 
         };
-        this.socket = io("http://192.168.1.7:3000");
+        this.socket = io(serverip.ip);
     }
 
     componentDidMount() {
@@ -29,8 +31,8 @@ class ChatRoom extends Component {
     }
 
     sendMessage = (msg) =>{
+        console.log(this.state.username)
         var obj = {
-            userid: this.state.userid,
             username: this.state.username,
             chatroomid: this.state.chatroomid,
             message: msg
@@ -45,7 +47,7 @@ class ChatRoom extends Component {
                 {this.state.chatMessages ?
                     <FlatList
                         data={this.state.chatMessages.messages}
-                        renderItem={({item}) => <ChatMessage message={item} userid={this.state.userid}/>}
+                        renderItem={({item}) => <ChatMessage message={item} userid={this.state.userid} username={this.state.username}/>}
                     />
                     : ""
                 }

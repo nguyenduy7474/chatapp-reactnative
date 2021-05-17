@@ -14,9 +14,10 @@ import PersonsScreen from '../screens/PersonsScreen';
 import TabTwoScreen from '../screens/TabTwoScreen';
 import { MainTabParamList, TabOneParamList, TabTwoParamList } from '../types';
 
+
 const MainTab = createMaterialTopTabNavigator<MainTabParamList>();
 
-export default function MainTabNavigator() {
+export default function MainTabNavigator(props) {
   const colorScheme = useColorScheme();
 
   return (
@@ -41,6 +42,7 @@ export default function MainTabNavigator() {
         options={{
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
         }}
+        initialParams={{ username: props.route.params.username }}
       />
       <MainTab.Screen
         name="Groups"
@@ -48,6 +50,7 @@ export default function MainTabNavigator() {
         options={{
           tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
         }}
+        initialParams={{ username: props.route.params.username }}
       />
     </MainTab.Navigator>
   );

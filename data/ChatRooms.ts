@@ -2,7 +2,7 @@ export default [{
     id: '1',
     users: [{
         id: 'u1',
-        name: 'EU',
+        name: 'T',
         imageUri: 'https://wwpath.net/wp-content/uploads/2020/09/lienminhchauAuavatar.png',
     }, {
         id: 'u2',

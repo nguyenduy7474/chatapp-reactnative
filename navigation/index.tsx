@@ -6,7 +6,7 @@
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import {CardStyleInterpolators, createStackNavigator} from '@react-navigation/stack';
 import * as React from 'react';
-import { ColorSchemeName } from 'react-native';
+import {ColorSchemeName} from 'react-native';
 
 import NotFoundScreen from '../screens/NotFoundScreen';
 import ChatRoomScreen from '../screens/ChatRoomScreen';
@@ -14,8 +14,13 @@ import { RootStackParamList} from '../types';
 import MainTabNavigator from './MainTabNavigator';
 import LinkingConfiguration from './LinkingConfiguration';
 import Colors from "../constants/Colors";
+import LoginScreen from '../screens/LoginScreen';
+import RegisterScreen from '../screens/RegisterScreen';
+import { Button } from 'react-native-elements';
+import * as SecureStore from 'expo-secure-store';
+import ContactsScreen from "../screens/ContactsScreen";
 
-export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
+export default function Navigation({colorScheme }: { colorScheme: ColorSchemeName }) {
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
@@ -29,8 +34,8 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
 // Read more here: https://reactnavigation.org/docs/modal
 const Stack = createStackNavigator<RootStackParamList>();
 
-function RootNavigator() {
-  return (
+function RootNavigator({navigation}) {
+    return (
     <Stack.Navigator screenOptions={{
         headerStyle:{
             backgroundColor: Colors.light.tint,
@@ -46,21 +51,51 @@ function RootNavigator() {
         gestureDirection: "horizontal",
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
     }}>
-      <Stack.Screen
-          name="Root"
-          component={MainTabNavigator}
-          options={{
-              title:"ChatApp"
-          }}
-      />
+
+        <Stack.Screen name="Login" component={LoginScreen} options={{ title: 'Login Chat App' }}/>
+        <Stack.Screen name="Register" component={RegisterScreen} options={{ title: 'Register Chat App' }} />
+        <Stack.Screen
+            name="Root"
+            component={MainTabNavigator}
+            options={({ navigation }) => ({
+            title:"Chat app",
+            headerRight: () => (
+                <Button
+                    onPress={async () => {
+                    //console.log(navigation)
+                    await SecureStore.deleteItemAsync("accesstoken")
+                    navigation.replace("Login")
+                }}
+                    title="Log out"
+                    buttonStyle={{
+                    backgroundColor: Colors.light.tint,
+                    marginRight: 10
+                }}
+                    titleStyle={{
+                    color: Colors.light.background,
+                    fontSize: 20,
+                }}
+                />)
+            })}
+
+        />
         <Stack.Screen
             name="ChatRoomScreen"
             component={ChatRoomScreen}
             options={({route}) => ({
-                title: route.params.name
+                title: route.params.desusername
             })}
+        />
+        <Stack.Screen
+            name="Contacts"
+            component={ContactsScreen}
         />
         <Stack.Screen name="NotFound" component={NotFoundScreen} options={{ title: 'Oops!' }} />
     </Stack.Navigator>
   );
+}
+
+async function logOut() {
+    console.warn("ss")
+
 }

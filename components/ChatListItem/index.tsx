@@ -7,17 +7,24 @@ import {useNavigation} from '@react-navigation/native';
 
 export type ChatListItemProps = {
     chatroom: ChatRoom;
+    username: string
 }
 
 const ChatListItem = (props: ChatListItemProps) => {
-    const {chatroom} = props;
-    const user = chatroom.users[1];
+    const {chatroom, username} = props;
+    var user = "";
+    for(var i=0 ;i<chatroom.users.length; i++){
+        if(chatroom.users[i].name != username){
+            user = chatroom.users[i]
+            break;
+        }
+    }
     const navigation = useNavigation()
     const onClick = () =>{
         navigation.navigate('ChatRoomScreen', {
             chatroomid: chatroom.id,
-            userid: user.id,
-            username: user.name
+            username: username,
+            desusername: user.name
         })
     }
 

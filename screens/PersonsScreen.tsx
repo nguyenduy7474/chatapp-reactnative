@@ -8,22 +8,38 @@ import {ChatRoom} from "../types";
 import ChatRooms from '../data/ChatRooms';
 import {Component} from "react";
 import io from "socket.io-client";
+const serverip = require('../serverip.json');
+import * as SecureStore from 'expo-secure-store';
+import NewMessageButton from "../components/NewMessageButton";
+
+
 
 class PersonsScreen extends Component{
   constructor(props) {
     super(props);
     this.state = {
       chatRoom: [],
-      socket: ""
+      socket: "",
+      username: ""
     };
-    this.socket = io("http://192.168.1.7:3000");
+    this.socket = io(serverip.ip);
   }
 
-  componentDidMount() {
-    this.socket.emit("chat person", "getperson");
-    this.socket.on("chat person respone", msg => {
-      this.setState({ chatRoom: msg});
+  async componentDidMount() {
+    //console.log(this.props.route.params)
+    //let token = await this.getValueFor("accesstoken")
+    this.setState({ username: this.props.route.params.username});
+    this.socket.emit("chat person", {username: this.props.route.params.username});
+    this.socket.on("chat person respone", (msg) => {
+      this.setState({ chatRoom: this.state.chatRoom.concat(msg)})
     });
+  }
+
+  getValueFor = async (key) => {
+    let result = await SecureStore.getItemAsync(key);
+    if (result) {
+      return result
+    }
   }
 
   render = () => {
@@ -32,9 +48,10 @@ class PersonsScreen extends Component{
           <FlatList
               style={{width: '100%'}}
               data={this.state.chatRoom}
-              renderItem={({item}) => <ChatListItem chatroom={item}/>}
+              renderItem={({item}) => <ChatListItem chatroom={item} username={this.props.route.params.username}/>}
               keyExtractor={(item) => item.id}
           />
+          <NewMessageButton username={this.state.username}/>
         </View>
     );
   }
