@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet, Modal } from 'react-native';
 
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
@@ -11,7 +11,6 @@ import io from "socket.io-client";
 const serverip = require('../serverip.json');
 import * as SecureStore from 'expo-secure-store';
 import NewMessageButton from "../components/NewMessageButton";
-
 
 
 class PersonsScreen extends Component{
@@ -26,8 +25,10 @@ class PersonsScreen extends Component{
   }
 
   async componentDidMount() {
-    //console.log(this.props.route.params)
-    //let token = await this.getValueFor("accesstoken")
+/*    let pvk = await this.getValueFor("privatekey1")
+    console.log(pvk)
+    await SecureStore.deleteItemAsync("privatekey1")*/
+
     this.setState({ username: this.props.route.params.username});
     this.socket.emit("chat person", {username: this.props.route.params.username});
     this.socket.on("chat person respone", (msg) => {

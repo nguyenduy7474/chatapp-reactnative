@@ -52,6 +52,7 @@ export default class LoginScreen extends Component {
     }
 
     onRegisterPress = () => {
+        console.log(">>>>>")
         let data = {
             username: this.state.username,
             password: this.state.password,

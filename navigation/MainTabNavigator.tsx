@@ -44,14 +44,6 @@ export default function MainTabNavigator(props) {
         }}
         initialParams={{ username: props.route.params.username }}
       />
-      <MainTab.Screen
-        name="Groups"
-        component={TabTwoNavigator}
-        options={{
-          tabBarIcon: ({ color }) => <TabBarIcon name="ios-code" color={color} />,
-        }}
-        initialParams={{ username: props.route.params.username }}
-      />
     </MainTab.Navigator>
   );
 }

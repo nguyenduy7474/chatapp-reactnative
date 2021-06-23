@@ -20,10 +20,8 @@ export default class ContactsScreen extends Component{
     }
 
     componentDidMount() {
-        console.log(this.props.route.params.username)
         this.socket.emit("get user", {username: this.props.route.params.username});
         this.socket.on("get user respone", msg => {
-
             this.setState({ users: msg.userExist});
         });
     }
@@ -34,7 +32,7 @@ export default class ContactsScreen extends Component{
                 <FlatList
                     style={{width: '100%'}}
                     data={this.state.users}
-                    renderItem={({ item }) => <ContactListItem user={item} currentusername={this.props.route.params.username} />}
+                    renderItem={({ item }) => <ContactListItem user={item} currentusername={this.props.route.params.username} navigation={this.props.navigation} />}
                     keyExtractor={(item) => item._id}
                 />
             </View>

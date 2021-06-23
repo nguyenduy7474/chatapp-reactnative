@@ -10,6 +10,8 @@ import styles from "./styles";
 import { useNavigation } from '@react-navigation/native';
 import io from "socket.io-client";
 const serverip = require('../../serverip.json');
+import * as SecureStore from 'expo-secure-store';
+import { RSA } from 'react-native-rsa-native';
 
 /*import {
     API,
@@ -39,15 +41,34 @@ class ContactListItem extends Component{
 
     }
 
+    save = async (key, value) => {
+        await SecureStore.setItemAsync(key, value);
+    }
+
+    getValueFor = async (key) => {
+        let result = await SecureStore.getItemAsync(key);
+        if (result) {
+            return result
+        }else{
+            return false
+        }
+    }
+
     onClick = () => {
         //console.log(this.props)
         this.socket.emit("create new room chat", {
             username: this.props.user.username,
-            currentusername: this.props.currentusername
+            currentusername: this.props.currentusername,
+            desavatar: this.props.user.avatar
         });
-        this.socket.on("create new room chat respone", msg => {
-            console.log(msg)
-            //this.setState({ users: msg.userExist});
+        this.socket.on("create new room chat respone", async msg => {
+            await this.save("privatekey"+msg.success.id, JSON.stringify(msg.success.privatekey))
+
+            this.props.navigation.navigate('ChatRoomScreen', {
+                chatroomid: msg.success.id,
+                username: msg.success.users[0].name,
+                desusername: msg.success.users[1].name,
+            })
         });
     }
 
@@ -56,7 +77,7 @@ class ContactListItem extends Component{
             <TouchableWithoutFeedback onPress={this.onClick}>
                 <View style={styles.container}>
                     <View style={styles.lefContainer}>
-                        <Image source={{ uri: "http://media.tinthethao.com.vn/files/bongda/2019/06/09/ngay-ra-mat-chelsea-hazard-da-sat-canh-cung-ai-193909jpg.jpg" }} style={styles.avatar}/>
+                        <Image source={{ uri: this.props.user.avatar }} style={styles.avatar}/>
 
                         <View style={styles.midContainer}>
                             <Text style={styles.username}>{this.props.user.username}</Text>

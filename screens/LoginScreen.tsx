@@ -49,6 +49,7 @@ export default class LoginScreen extends Component {
     }
 
     async componentDidMount() {
+
         let token = await this.getValueFor("accesstoken")
         if(token){
             this.socket.emit("check accesstoken", {accesstoken: token});
@@ -74,6 +75,8 @@ export default class LoginScreen extends Component {
         let result = await SecureStore.getItemAsync(key);
         if (result) {
             return result
+        }else{
+            return false
         }
     }
 

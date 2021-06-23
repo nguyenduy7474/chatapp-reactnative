@@ -1,9 +1,10 @@
 import React from 'react';
-import {View, Text, Image, TouchableWithoutFeedback} from "react-native";
+import {View, Text, Image, TouchableWithoutFeedback, Modal} from "react-native";
 import {ChatRoom} from'../../types';
 import styles from './style';
 import moment from "moment";
 import {useNavigation} from '@react-navigation/native';
+
 
 export type ChatListItemProps = {
     chatroom: ChatRoom;
@@ -24,9 +25,10 @@ const ChatListItem = (props: ChatListItemProps) => {
         navigation.navigate('ChatRoomScreen', {
             chatroomid: chatroom.id,
             username: username,
-            desusername: user.name
+            desusername: user.name,
         })
     }
+
 
 
     return(
